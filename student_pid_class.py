@@ -6,7 +6,7 @@ class PID:
     This is your PID class! Be sure to read the docstrings carefully and fill in all methods of this class!
     """
 
-    def __init__(self, kp, ki, kd, k):
+    def __init__(self, kp, ki, kd, k=1300):
         """
         Here is where you will initialize all of the instance variables you might need!
 
@@ -23,8 +23,12 @@ class PID:
         :param kd: The derivative gain constant
         :param k: The offset constant that will be added to the sum of the P, I, and D control terms
         """
-
-        pass
+        self._p = kp
+        self._i = ki
+        self._d = kd
+        self.k = k
+        self.prev_error = None
+        self.accumulated_error = 0
 
     def step(self, err, dt):
         """
@@ -39,8 +43,12 @@ class PID:
         :returns: You should restrict your output to be between 1100 and 1900. This is a PWM command, which will be
                   sent to the SkyLine's throttle channel
         """
-
-        return 1100
+        self.accumulated_error += err
+        control_output = self.k + self._p * err + self._i * self.accumulated_error
+        if (self.prev_error is not None and dt != 0.0):
+            control_output +=  self._d * (err - self.prev_error)/dt
+        self.prev_error = err
+        return max(1100, min(control_output, 1900) )
 
     def reset(self):
         """
