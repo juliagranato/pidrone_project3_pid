@@ -48,7 +48,7 @@ class PID:
         if (self.prev_error is not None and dt != 0.0):
             control_output +=  self._d * (err - self.prev_error)/dt
         self.prev_error = err
-        return max(1100, min(control_output, 1900) )
+        return max(1100, min(control_output, 1900))
 
     def reset(self):
         """
