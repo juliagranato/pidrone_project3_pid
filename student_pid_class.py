@@ -56,5 +56,5 @@ class PID:
         from armed mode to flying mode. You will want to reset the PID terms so that previously stored values will
         not affect the current calculations (think about what this entails)!
         """
-
-        pass
+        self.accumulated_error = 0
+        self.prev_error = None
